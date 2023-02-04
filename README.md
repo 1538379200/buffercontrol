@@ -1,7 +1,7 @@
 # buffercontrol
 Quickly manipulate vim's buffer
 
-一个简单的进行buffer管理插件
+临时写的一个简单插件，进行buffer管理
 ## 安装
 ### Packer
 ```use {'1538379200/buffercontrol'}```
