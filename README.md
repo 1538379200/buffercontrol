@@ -15,8 +15,3 @@ Quickly manipulate vim's buffer
 - 使用命令 ```:Bdo``` 可关闭其他buffer
 ![image](https://user-images.githubusercontent.com/42434762/216771087-cb27388d-b397-46fd-b84d-a1e0723200c7.png)
 
-## 配置
-插件不需要其他配置，如果你想，你也可以进行一些改键
-```vimscript
-nmap <leader>b :call BufferControl()<cr>
-```
