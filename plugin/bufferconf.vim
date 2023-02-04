@@ -79,6 +79,7 @@ function! bufferconf#BufferControl()
 endfunction
 
 command! Bdo :call bufferconf#CloseOtherBuffer(1)
+command! BufferControl :call bufferconf#BufferControl()
 nmap <leader>b :call bufferconf#BufferControl()<cr>
 " command! Bdo :call CloseOtherBuffer(1)
 " nmap <leader>b :call BufferControl()<cr>
