@@ -6,15 +6,22 @@ Quickly manipulate vim's buffer
 ### Packer
 ```use {'1538379200/buffercontrol'}```
 
-## 使用
-- ```<leader>b``` 快捷键打开buffer管理悬浮窗口
-- ```:BufferControl``` 命令行打开悬浮窗口
-- 悬浮窗口中，```x``` 可关闭当前光标下的buffer
-- 悬浮窗口中，```<C-x>``` 可关闭除当前光标下的其他buffer
-- 悬浮窗口中，```<Enter>``` 可打开光标下的buffer
-- 悬浮窗口中，```q``` 或者 ```<Esc>``` 可退出当前窗口
-- 使用命令 ```:Bdo``` 可关闭其他buffer
-![image](https://user-images.githubusercontent.com/42434762/216771087-cb27388d-b397-46fd-b84d-a1e0723200c7.png)
+## 界面预览
+![image](https://user-images.githubusercontent.com/42434762/216809339-feea75cd-2064-4233-bef6-2216a666b158.png)
+
+
+## 默认快捷键
+- ```<leader>b``` 打开悬浮管理窗口
+- ```<Tab>/<Shift><Tab>``` 向下/向上移动，你也可以使用 ```j/k``` 移动
+- ```o``` 或者 ```<Enter>``` 切换到光标下的buffer
+- ```x``` 关闭光标下的buffer
+- ```X``` 关闭除光标下的其他buffer
+- ```q``` 或者 ```<Esc>``` 可退出悬浮窗口
+
+## 命令行
+- ```:BufferControl``` 打开悬浮窗口
+- ```:Bdo``` 关闭除当前buffer外其他buffer
+
 
 ## 配置
 插件不需要其他配置，不过你也可以改动一下
