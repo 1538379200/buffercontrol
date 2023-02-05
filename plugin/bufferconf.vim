@@ -11,7 +11,20 @@ let buffers = execute("ls")
 let buf_list = split(buffers, '\n')
 let format_buffers = []
 for buf in buf_list
-    call add(format_buffers, trim(buf))
+    " call add(format_buffers, trim(buf))
+    let msg_list = split(buf)
+    let buf_num = ' ' . msg_list[0]
+    while strlen(buf_num) < 5
+        let buf_num = buf_num . ' '
+    endwhile
+    let buf_status = msg_list[1]
+    while strlen(buf_status) < 5
+        let buf_status = buf_status . ' '
+    endwhile
+    let buf_path = "" . ' ' . split(msg_list[2], "\"")[0]
+    let buf_line = msg_list[4]
+    let msg = buf_num . buf_status . buf_path . ':' . buf_line
+    call add(format_buffers, msg)
 endfor
 return format_buffers
 endfunction
@@ -65,17 +78,37 @@ function! bufferconf#BufferControl()
     let float_height = winheight("%")
     let float_row = 0
     let float_col = 0
-    let opts = {"relative": "editor", "width": float_width, "height": float_height, "col": float_col, "row": float_row, "anchor": "NW", "border": "double"}
-    let win = nvim_open_win(buf, 1, opts)
-    " call nvim_win_set_option(win, "winhl", "Normal:LspsagaRenameBorder")
+    let opts = {
+        \"relative": "editor", 
+        \"width": float_width, 
+        \"height": float_height, 
+        \"col": float_col, 
+        \"row": float_row, 
+        \"anchor": "NW", 
+        \"border": "rounded", 
+        \"style": "minimal"}
+    let win = nvim_open_win(buf, v:true, opts)
+    hi def BufferControlNormal ctermbg=LightBlue guibg=#284566 ctermfg=White guifg=White
+    " call nvim_win_set_option(win, "winhl", "Normal:BufferControlNormal")
+    " call nvim_win_set_option(win, "winhl", "Normal:")   
+    call nvim_win_set_option(win, "winhl", "CursorLine:BufferControlNormal")
+    call nvim_win_set_option(win, 'wrap', v:false)
+    call nvim_win_set_option(win, 'cul', v:true)
     call nvim_buf_set_option(buf, 'bufhidden', 'wipe')
     call nvim_buf_set_option(buf, 'buflisted', v:false)
     call nvim_buf_set_option(buf, 'buftype', 'nofile')
     call nvim_buf_set_keymap(buf, 'n', 'q', ':q<cr>', {'nowait': v:true, 'silent': v:true})
     call nvim_buf_set_keymap(buf, 'n', '<Esc>', ':q<cr>', {'nowait': v:true, 'silent': v:true})
     call nvim_buf_set_keymap(buf, 'n', '<Enter>', ':call SwitchBuffer()<cr>', {'silent': v:true, 'nowait': v:true})
+    call nvim_buf_set_keymap(buf, 'n', 'o', ':call SwitchBuffer()<cr>', {'silent': v:true, 'nowait': v:true})
     call nvim_buf_set_keymap(buf, 'n', 'x', ':call CloseBuffer()<cr>', {'nowait': v:true, 'silent': v:true})
-    call nvim_buf_set_keymap(buf, 'n', '<C-x>', ':call bufferconf#CloseOtherBuffer()<cr>', {'nowait': v:true, 'silent': v:true})
+    call nvim_buf_set_keymap(buf, 'n', '<Tab>', 'j', {'nowait': v:true, 'silent': v:true})
+    call nvim_buf_set_keymap(buf, 'n', '<S-Tab>', 'k', {'nowait': v:true, 'silent': v:true})
+    call nvim_buf_set_keymap(buf, 'n', 'X', ':call bufferconf#CloseOtherBuffer()<cr>', {'nowait': v:true, 'silent': v:true})
+    let no_keys = ['i', 'a', 'A', 'I', 'O', '<Insert>', '<Delete>', 'h', 'l', '<Left>', '<Right>', 'v', 'V', 'Q']
+    for key in no_keys
+        call nvim_buf_set_keymap(buf, 'n', key, "<Nop>", {})
+    endfor
 endfunction
 
 command! Bdo :call bufferconf#CloseOtherBuffer(1)
