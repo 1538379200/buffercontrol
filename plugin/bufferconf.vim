@@ -9,7 +9,11 @@
 function! GetAllBuffers()
 let buffers = execute("ls")
 let buf_list = split(buffers, '\n')
+let current_bufnr = bufnr("%")
 let format_buffers = []
+" let format_buffers = {}
+let exists_path = []
+let current_file = expand("%:p")
 for buf in buf_list
     " call add(format_buffers, trim(buf))
     let msg_list = split(buf)
@@ -21,17 +25,43 @@ for buf in buf_list
     while strlen(buf_status) < 5
         let buf_status = buf_status . ' '
     endwhile
-    let buf_path = "" . ' ' . split(msg_list[2], "\"")[0]
+    let path_list = split(split(msg_list[2], "\"")[0], "\\")
+    if len(path_list) == 1
+        if index(exists_path, path_list[0]) > -1
+            let path_list = split(current_file, "\\")
+        endif
+    endif
+    let path_index = -1
+    let filename = path_list[path_index]
+    if index(exists_path, filename) == -1
+        call add(exists_path, filename)
+    else
+        let path_index = -2
+        for path in path_list
+            let filename = join(path_list[path_index:], "\\")
+            if index(format_buffers, filename) == -1
+                call add(exists_path, filename)
+                break
+            else
+                let path_index = path_index - 1
+            endif
+        endfor
+    endif
+    " let buf_path = "" . ' ' . split(msg_list[2], "\"")[0]
+    let buf_path = "" . ' ' . filename
     let buf_line = msg_list[4]
     let msg = buf_num . buf_status . buf_path . ':' . buf_line
-    call add(format_buffers, msg)
+    if split(buf_num)[0] != current_bufnr
+        call add(format_buffers, msg)
+    else
+        call insert(format_buffers, msg, 0)
+    endif
 endfor
 return format_buffers
 endfunction
 
 function! GetBufferNumber()
     let line_text = getline(".")
-    echo line_text
     return split(line_text)[0]
 endfunction
 
