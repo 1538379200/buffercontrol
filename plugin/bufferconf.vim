@@ -10,6 +10,7 @@ function! GetAllBuffers()
 let buffers = execute("ls")
 let buf_list = split(buffers, '\n')
 let current_bufnr = bufnr("%")
+let insert_number = 0
 let format_buffers = []
 " let format_buffers = {}
 let exists_path = []
@@ -51,10 +52,11 @@ for buf in buf_list
     let buf_path = "" . ' ' . filename
     let buf_line = msg_list[4]
     let msg = buf_num . buf_status . buf_path . ':' . buf_line
-    if split(buf_num)[0] != current_bufnr
+    if split(buf_num)[0] < current_bufnr
         call add(format_buffers, msg)
     else
-        call insert(format_buffers, msg, 0)
+        call insert(format_buffers, msg, insert_number)
+        let insert_number = insert_number + 1
     endif
 endfor
 return format_buffers
